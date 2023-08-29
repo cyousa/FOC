@@ -1,3 +1,0 @@
-cnmd
-fuck
-nmsl
