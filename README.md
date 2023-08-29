@@ -62,3 +62,44 @@ md我用的是有源晶振，结果买成无源晶振了，差点把板子干烧
 <img src="README/image-20230829144116133.png" alt="image-20230829144116133" style="zoom:50%;" />
 
 不需要外围电路
+
+## 二，算法
+
+### 	1，Park变换
+
+```c
+void Park_change_Contrary()//Park逆变换
+{
+	Ualpha=-Uq*sin(Aangle_Now);
+	Ubata= Uq*cos(Aangle_Now);
+	
+}
+```
+
+它的作用就是通过编码器读取电机的时时电角度，将正弦量转化成常量
+
+![image-20230829210324532](README/image-20230829210324532.png)
+DQ为旋转坐标轴，目标适量是随DQ轴转动的，形成正弦信号，然后将他投影到Beta和alpha轴的常量
+
+### 2，Clark变换
+
+​	这个很简单，不做过多解释。目的是将三相电流转换成两相
+![image-20230829210902605](README/image-20230829210902605.png)
+
+### 3，扇区划分
+
+```C
+u1=Ubata;
+u2=squrt3*Ualpha/2-Ubata/2;
+u3=-squrt3*Ualpha/2-Ubata/2;
+```
+
+<img src="README/image-20230829215059869.png" alt="image-20230829215059869" style="zoom: 50%;" /><img src="README/image-20230829215147293.png" alt="image-20230829215147293" style="zoom: 67%;" />
+
+![image-20230829215247244](README/image-20230829215247244.png)
+
+通过投影的方式，将目标向量分解到Alpha和Beta轴上，每个扇区对于一个A B C的组合值，从而来区分扇区
+
+![image-20230829215419021](README/image-20230829215419021.png)
+
+通过扇区划分后，计算得到的时间就能生成马鞍波了
